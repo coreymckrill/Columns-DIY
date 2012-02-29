@@ -1,11 +1,13 @@
 <?php
 /**
  * Plugin Name: Columns DIY
- * Plugin URI: http://jupiterwise.com
+ * Plugin URI: https://github.com/jupiterwise/Columns-DIY/
  * Description: Two simple shortcodes for generating div-based columns and rows. Wrap the desired content in <code>[column]</code> <code>[/column]</code>. Mark the end of a row with <code>[endrow]</code>. CSS not included.
  * Version: 1.0
  * Author: Corey McKrill
  * Author URI: http://jupiterwise.com/
+ * License: GNU General Public License v2.0
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
 
 if ( ! class_exists( 'Columns_DIY' ) ) {
