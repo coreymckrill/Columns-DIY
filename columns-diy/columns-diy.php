@@ -81,9 +81,13 @@ if ( ! class_exists( 'Columns_DIY' ) ) {
 			// Add custom classes.
 			if ( $class )
 				$colclasslist .= ' ' . esc_attr( $class );
+				
+			// Fix strange <p> placements
+			$content = preg_replace( '/<\/?p>/', "\n", $content );
+			$content = wpautop( $content );
 			
 			// Put it all together.
-			$content = $pre_content . '<div class="' . $colclasslist . "\">\n<p>" . $content . "</p>\n</div><!-- end " . $this->pfx( 'column' ) . " -->\n";
+			$content = $pre_content . '<div class="' . $colclasslist . "\">\n" . $content . "</div><!-- end " . $this->pfx( 'column' ) . " -->\n";
 			
 			// Allow for other shortcodes inside [column][/column].
 			do_shortcode( $content );
@@ -145,7 +149,7 @@ if ( ! class_exists( 'Columns_DIY' ) ) {
 		
 		/**
 		 * Close the last row <div> if it's still open. Clean up messy HTML left
-		 * in the content as a result of the inline nature of shortcodes.
+		 * in the content as a result of shortcodes interacting with wpautop().
 		 */
 		function cleanup( $content ) {
 			
@@ -155,9 +159,7 @@ if ( ! class_exists( 'Columns_DIY' ) ) {
 			
 			// Regex patterns for cleaning up the HTML.
 			$patterns = array(
-				array( '/\n?<p><div class="' . $this->pfx( 'column' ) . '/', '<div class="' . $this->pfx( 'column' ) ),
-				array( '/<\/p>\n?<div class="' . $this->pfx( 'row' ) . '/', '<div class="' . $this->pfx( 'row' ) ),
-				array( '/end ' . $this->pfx( 'row' ) . ' -->\n?<\/p>/', "end " . $this->pfx( 'row' ) . " -->\n" )
+				array( '/end ' . $this->pfx( 'row' ) . ' -->\n?\n?<\/p>/', "end " . $this->pfx( 'row' ) . " -->\n" )
 			);
 			
 			// Run the regex.
