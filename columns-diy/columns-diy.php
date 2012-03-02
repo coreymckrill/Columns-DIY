@@ -87,7 +87,7 @@ if ( ! class_exists( 'Columns_DIY' ) ) {
 			$content = wpautop( $content );
 			
 			// Put it all together.
-			$content = $pre_content . '<div class="' . $colclasslist . "\">\n" . $content . "</div><!-- end " . $this->pfx( 'column' ) . " -->\n";
+			$content = $pre_content . '<div class="' . $colclasslist . "\">\n" . $content . "</div><!-- end " . $this->pfx( 'column' ) . "-" . $this->colcount[$pid] . " -->\n";
 			
 			// Allow for other shortcodes inside [column][/column].
 			do_shortcode( $content );
@@ -143,7 +143,7 @@ if ( ! class_exists( 'Columns_DIY' ) ) {
 			$this->colcount[$pid] = 0;
 			
 			// Send the closing </div> to the compiling function.
-			return "</div><!-- end " . $this->pfx( 'row' ) . " -->\n\n";
+			return "</div><!-- end " . $this->pfx( 'row' ) . "-" . $this->rowcount[$pid] . " -->\n\n";
 		
 		}
 		
@@ -153,13 +153,21 @@ if ( ! class_exists( 'Columns_DIY' ) ) {
 		 */
 		function cleanup( $content ) {
 			
-			// Tack on the closing </div>
-			if ( $this->openrow )
-				$content .= $this->end_row();
+			global $post;
+			$pid = $post->ID;
+			
+			// Insert the last closing </div> if the user forgot to use [endrow]
+			if ( $this->openrow ) {
+				$colstr = $this->pfx( 'column' ) . "-" . $this->colcount[$pid] . " -->\n";
+				preg_match_all( '/' . $colstr . '/', $content, $matches, PREG_OFFSET_CAPTURE );
+				$lastcol = array_pop( array_pop( $matches ) );
+				$closetag = $this->end_row();
+				$content = substr_replace( $content, $closetag, $lastcol[1] + strlen( $colstr ), 0 );
+			}
 			
 			// Regex patterns for cleaning up the HTML.
 			$patterns = array(
-				array( '/end ' . $this->pfx( 'row' ) . ' -->\n?\n?<\/p>/', "end " . $this->pfx( 'row' ) . " -->\n" )
+				array( '/' . $this->pfx( 'row' ) . "-([0-9]+) -->\n?\n?<\/p>/", $this->pfx( 'row' ) . "-$1 -->\n" )
 			);
 			
 			// Run the regex.
