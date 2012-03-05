@@ -61,11 +61,12 @@ if ( ! class_exists( 'Columns_DIY' ) ) {
 			// Extract shortcode attributes.
 			extract( shortcode_atts( array(
 				'class'    => '',
-				'rowclass' => ''
+				'rowclass' => '',
+				'norow'    => false
 			), $atts ) );
 			
 			// If it's the first column in the row, add an opening <div>.
-			if ( ! $this->openrow )
+			if ( ! $this->openrow && ! $norow )
 				$pre_content .= $this->begin_row( $rowclass );
 			
 			// Increment the column count.
@@ -133,17 +134,25 @@ if ( ! class_exists( 'Columns_DIY' ) ) {
 		 */
 		function end_row() {
 			
-			global $post;
-			$pid = $post->ID;
+			if ( $this->openrow ) {
+				
+				global $post;
+				$pid = $post->ID;
+				
+				// Mark the row as "closed".
+				$this->openrow = 0;
+				
+				// Reset column count.
+				$this->colcount[$pid] = 0;
+				
+				// Send the closing </div> to the compiling function.
+				return "</div><!-- end " . $this->pfx( 'row' ) . "-" . $this->rowcount[$pid] . " -->\n\n";
+				
+			} else {
+				
+				return false;
 			
-			// Mark the row as "closed".
-			$this->openrow = 0;
-			
-			// Reset column count.
-			$this->colcount[$pid] = 0;
-			
-			// Send the closing </div> to the compiling function.
-			return "</div><!-- end " . $this->pfx( 'row' ) . "-" . $this->rowcount[$pid] . " -->\n\n";
+			}
 		
 		}
 		
