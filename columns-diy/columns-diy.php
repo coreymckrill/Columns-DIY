@@ -91,7 +91,7 @@ if ( ! class_exists( 'Columns_DIY' ) ) {
 			$content = $pre_content . '<div class="' . $colclasslist . "\">\n" . $content . "</div><!-- end " . $this->pfx( 'column' ) . "-" . $this->colcount[$pid] . " -->\n";
 			
 			// Allow for other shortcodes inside [column][/column].
-			do_shortcode( $content );
+			$content = do_shortcode( $content );
 			
 			// Output
 			return $content;
