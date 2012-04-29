@@ -8,11 +8,8 @@ This plugin is intended for theme developers and others who want to have full co
 
 That said, this plugin is not plug-and-play. It does not include any styles out-of-the-box, so if you start using the shortcodes without adding appropriate CSS rules, there probably won't be any visible changes to your content.
 
-<<<<<<< HEAD
-See the [Recipes](Recipes) page on the wiki for some styling examples.
+See the [Recipes](https://github.com/jupiterwise/Columns-DIY/wiki/Recipes) page on the wiki for some styling examples.
 
-=======
->>>>>>> origin/master
 ### Usage ###
 
 * Designate each column with `[column]` and `[/column]`
