@@ -51,6 +51,8 @@ if ( ! class_exists( 'Columns_DIY' ) ) {
 		 *            multiple classes with spaces.
 		 * rowclass - Optional classes for the row <div> element. Only works
 		 *            when included with the first column in a row.
+		 * style    - Optional inline styles for the column <div> element.
+		 * norow    - Set to true to omit the row wrapper <div>.
 		 */
 		function insert_column( $atts, $content = null ) {
 			
@@ -62,6 +64,7 @@ if ( ! class_exists( 'Columns_DIY' ) ) {
 			extract( shortcode_atts( array(
 				'class'    => '',
 				'rowclass' => '',
+				'style'    => '',
 				'norow'    => false
 			), $atts ) );
 			
@@ -83,15 +86,25 @@ if ( ! class_exists( 'Columns_DIY' ) ) {
 			if ( $class )
 				$colclasslist .= ' ' . esc_attr( $class );
 				
+			// Initial styles.
+			$colstyles = '';
+			
+			// Add custom styles.
+			if ( $style )
+				$colstyles .= ' style="' . esc_attr( $style ) . '"';
+			
+			// Put it all together.
+			$content = $pre_content . '<div class="' . $colclasslist . '"' . $colstyles . ">\n" . $content . "</div>";
+			
+			// Allow for other shortcodes inside [column][/column].
+			$content = do_shortcode( $content );
+			
 			// Fix strange <p> placements
 			$content = preg_replace( '/<\/?p>/', "\n", $content );
 			$content = wpautop( $content );
 			
-			// Put it all together.
-			$content = $pre_content . '<div class="' . $colclasslist . "\">\n" . $content . "</div><!-- end " . $this->pfx( 'column' ) . "-" . $this->colcount[$pid] . " -->\n";
-			
-			// Allow for other shortcodes inside [column][/column].
-			$content = do_shortcode( $content );
+			// Add column end marker
+			$content .= "<!-- end " . $this->pfx( 'column' ) . "-" . $this->colcount[$pid] . " -->\n";
 			
 			// Output
 			return $content;
@@ -176,7 +189,14 @@ if ( ! class_exists( 'Columns_DIY' ) ) {
 			
 			// Regex patterns for cleaning up the HTML.
 			$patterns = array(
-				array( '/' . $this->pfx( 'row' ) . "-([0-9]+) -->\n?\n?<\/p>/", $this->pfx( 'row' ) . "-$1 -->\n" )
+				array(
+					'/' . $this->pfx( 'row' ) . "-([0-9]+) -->\n?\n?<\/p>/",
+					$this->pfx( 'row' ) . "-$1 -->\n"
+				),
+				array(
+					'/<p><div/',
+					'<div'
+				)
 			);
 			
 			// Run the regex.
@@ -190,16 +210,11 @@ if ( ! class_exists( 'Columns_DIY' ) ) {
 		}
 		
 		/**
-		 * In case the shortcode should ever trigger more than one (unrelated)
-		 * function. Kind of redundant at the moment.
+		 * Shortcode handlers
 		 */
 		function column_shortcode( $atts, $content ) {
 			return $this->insert_column( $atts, $content );
 		}
-		
-		/**
-		 * Ditto.
-		 */
 		function row_shortcode() {
 			return $this->end_row();
 		}
