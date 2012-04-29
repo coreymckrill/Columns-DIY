@@ -82,6 +82,13 @@ if ( ! class_exists( 'Columns_DIY' ) ) {
 			// Build the initial list of classes to add to column <div>.
 			$colclasslist = $this->pfx( 'column' ) . ' ' . $this->pfx( 'column' ) . '-' . $this->colcount[$pid];
 			
+			// Determine parity
+			if ( $this->colcount[$pid] % 2 ) {
+				$colclasslist .= ' ' . $this->pfx( 'column' ) . '-odd';
+			} else {
+				$colclasslist .= ' ' . $this->pfx( 'column' ) . '-even';
+			}
+			
 			// Add custom classes.
 			if ( $class )
 				$colclasslist .= ' ' . esc_attr( $class );
@@ -129,6 +136,13 @@ if ( ! class_exists( 'Columns_DIY' ) ) {
 			
 			// Build the initial list of classes to add to row <div>.
 			$rowclasslist = $this->pfx( 'row' ) . ' ' . $this->pfx( 'row' ) . '-' . $this->rowcount[$pid];
+			
+			// Determine parity
+			if ( $this->rowcount[$pid] % 2 ) {
+				$rowclasslist .= ' ' . $this->pfx( 'row' ) . '-odd';
+			} else {
+				$rowclasslist .= ' ' . $this->pfx( 'row' ) . '-even';
+			}
 			
 			// Add custom classes.
 			if ( $rowclass )

@@ -17,9 +17,10 @@ See the [Recipes](https://github.com/jupiterwise/Columns-DIY/wiki/Recipes) page 
 
 ### Features ###
 
-* Enumerates columns and rows, allowing for per-column and -row styling.
+* Includes enumerated column and row classes, allowing for per-column and -row styling. Also includes parity classes (odd/even) for striping.
 * If a user forgets to add the last `[endrow]` shortcode, the plugin will automatically insert a closing `</div>` so the site layout doesn't get broken.
 * Cleans up errant `<p>` and `</p>` tags that result from Wordpress's `wpautop()` function.
+* All parameter inputs are escaped for security.
 
 ### Example ###
 
@@ -38,13 +39,13 @@ Putting this into the visual editor:
 
 Will result in this output:
 ```html
-<div class="diy-row diy-row-1">
-<div class="diy-column diy-column-1">
+<div class="diy-row diy-row-1 diy-row-odd">
+<div class="diy-column diy-column-1 diy-column-odd">
 <p>This is the column of Foo.</p>
 </div>
 <!-- end diy-column-1 -->
 
-<div class="diy-column diy-column-2">
+<div class="diy-column diy-column-2 diy-column-even">
 <p>This is the column of Bar.</p>
 </div>
 <!-- end diy-column-2 -->
