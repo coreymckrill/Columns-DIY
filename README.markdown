@@ -72,7 +72,11 @@ Set to true to omit the row wrapper `<div>`.
 
 There are a few different options for adding the CSS to style your columns:
 
-* Edit the `style.css` file in your theme. This is *not* recommended if you are using a third-party theme such as a commercial theme or one downloaded from the WordPress Theme Directory. Your changes will be lost if/when you update the theme to a new version.
+* Edit the style file in your theme (probably `style.css`). This is *not* recommended if you are using a third-party theme such as a commercial theme or one downloaded from the WordPress Theme Directory. Your changes will be lost if/when you update the theme to a new version.
 * Create a [child theme](http://codex.wordpress.org/Child_Themes).
 * Use a plugin such as [CSS & JavaScript Toolbox](http://wordpress.org/extend/plugins/css-javascript-toolbox/) to embed the styles without modifying your theme.
 * Use the `style` parameter in the `[column]` shortcode to add inline styles. Only recommended for "one-off" scenarios (and how often does a "one-off" remain that way?).
+
+## License ##
+
+[GNU General Public License v2.0](http://www.gnu.org/licenses/gpl-2.0.html)
