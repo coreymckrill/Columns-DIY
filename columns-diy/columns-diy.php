@@ -1,14 +1,17 @@
 <?php
-/**
- * Plugin Name: Columns DIY
- * Plugin URI: https://github.com/jupiterwise/Columns-DIY/
- * Description: Two simple shortcodes for generating div-based columns and rows. Wrap the desired content in <code>[column]</code> <code>[/column]</code>. Mark the end of a row with <code>[endrow]</code>. CSS not included.
- * Version: 1.0
- * Author: Corey McKrill
- * Author URI: http://jupiterwise.com/
- * License: GNU General Public License v2.0
- * License URI: http://www.gnu.org/licenses/gpl-2.0.html
- */
+/*
+Plugin Name: Columns DIY
+Plugin URI: https://github.com/jupiterwise/Columns-DIY/
+Description: Two simple shortcodes for generating div-based columns and rows. Wrap the desired content in <code>[column]</code> <code>[/column]</code>. Mark the end of a row with <code>[endrow]</code>. CSS not included.
+Version: 1.0
+Author: Corey McKrill
+Author URI: http://jupiterwise.com/
+License: GNU General Public License v2.0
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+
+Copyright 2012. Corey McKrill.
+
+*/
 
 if ( ! class_exists( 'Columns_DIY' ) ) {
 
@@ -53,6 +56,11 @@ if ( ! class_exists( 'Columns_DIY' ) ) {
 		 *            when included with the first column in a row.
 		 * style    - Optional inline styles for the column <div> element.
 		 * norow    - Set to true to omit the row wrapper <div>.
+		 *
+		 * @param  array   Array of values from shortcode attributes
+		 * @param  string  Optional string of inital content
+		 * @return string
+		 * @since  1.0
 		 */
 		function insert_column( $atts, $content = null ) {
 			
@@ -121,6 +129,10 @@ if ( ! class_exists( 'Columns_DIY' ) ) {
 		/**
 		 * Generate the opening <div> for a row. To add custom classes to this
 		 * <div>, use the rowclass attribute in the first [column] of a row.
+		 *
+		 * @param  string  Classes to add to the row div
+		 * @return string
+		 * @since  1.0
 		 */
 		function begin_row( $rowclass = null ) {
 			
@@ -158,6 +170,9 @@ if ( ! class_exists( 'Columns_DIY' ) ) {
 		
 		/**
 		 * Close the row <div>.
+		 *
+		 * @return string or bool
+		 * @since  1.0
 		 */
 		function end_row() {
 			
@@ -186,6 +201,10 @@ if ( ! class_exists( 'Columns_DIY' ) ) {
 		/**
 		 * Close the last row <div> if it's still open. Clean up messy HTML left
 		 * in the content as a result of shortcodes interacting with wpautop().
+		 *
+		 * @param  string  Content to clean up
+		 * @return string
+		 * @since  1.0
 		 */
 		function cleanup( $content ) {
 			
@@ -225,6 +244,8 @@ if ( ! class_exists( 'Columns_DIY' ) ) {
 		
 		/**
 		 * Shortcode handlers
+		 * 
+		 * @since 1.0
 		 */
 		function column_shortcode( $atts, $content ) {
 			return $this->insert_column( $atts, $content );
