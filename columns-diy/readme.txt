@@ -1,13 +1,13 @@
-=== Plugin Name ===
+=== Columns DIY ===
 Contributors: jupiterwise
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FC54RLA8U6VCC
 Tags: shortcode, columns
 Requires at least: 2.8
 Tested up to: 3.4.1
-Stable tag: 1.0
+Stable tag: 1_0
 License: GPLv2
 
-A WordPress plugin that enables two simple shortcodes for generating div-based columns and rows. Wrap the desired content block in [column] [/column]. Mark the end of a row with [endrow]. CSS not included.
+Simple shortcodes for div-based columns and rows. Wrap desired content in [column][/column]. Mark the end of a row with [endrow]. CSS not included.
 
 == Description ==
 
@@ -85,7 +85,7 @@ There are a few different options for adding the CSS to style your columns:
 
 == Frequently Asked Questions ==
 
-Check out the [GitHub repository] (https://github.com/jupiterwise/Columns-DIY) for more information.
+Check out the [GitHub repository](https://github.com/jupiterwise/Columns-DIY) for more information.
 
 == Changelog ==
 
