@@ -65,6 +65,9 @@ Inline styles for the column `<div>` element.
 * _norow_ (Boolean : false)
 Set to true to omit the row wrapper `<div>`.
 
+Example:
+`[column class="column-class-1 column-class-2" rowclass="row-class-1 row-class-2" style="color:green;" norow="true"]`
+
 ## Installation ##
 
 1. Upload the `columns-diy` folder to the `/wp-content/plugins/` directory
