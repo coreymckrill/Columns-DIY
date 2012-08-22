@@ -71,7 +71,7 @@ if ( ! class_exists( 'Columns_DIY' ) ) {
 		 * norow    - Set to true to omit the row wrapper <div>.
 		 *
 		 * @param  array   Array of values from shortcode attributes
-		 * @param  string  Optional string of inital content
+		 * @param  string  Optional string of initial content
 		 * @return string
 		 * @since  1.0
 		 */
