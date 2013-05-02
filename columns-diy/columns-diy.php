@@ -51,7 +51,8 @@ if ( ! class_exists( 'Columns_DIY' ) ) {
 			// Shortcodes and filters
 			add_shortcode( 'column', array( &$this, 'column_shortcode' ) );
 			add_shortcode( 'endrow', array( &$this, 'row_shortcode' ) );
-			add_filter( 'the_content', array( &$this, 'cleanup' ), 12, 1 );
+			add_filter( 'the_content', array( &$this, 'pre_cleanup' ), 10, 1 );
+			add_filter( 'the_content', array( &$this, 'post_cleanup' ), 12, 1 );
 			
 		}
 		
@@ -243,7 +244,42 @@ if ( ! class_exists( 'Columns_DIY' ) ) {
 			}
 		
 		}
-		
+
+	    /**
+	     * Clean up after collision of shortcodes and wpautop.
+	     *
+	     * @param  string $content
+	     * @return string
+	     * @since  1.1
+	     */
+	    function pre_cleanup( $content ) {
+
+            // Regex patterns for cleaning up errant wpautop output.
+            $patterns = array(
+	            array(
+	                "/<p>(\\[(\\[?)(column|endrow))/",
+                    "$1"
+                ),
+                array(
+	                "/((column|endrow)(?![\w-])([^\\]\\/]*(?:\\/(?!\\])[^\\]\\/]*)*?)(?:(\\/)\\]|\\]))<\/p>/",
+                    "$1"
+                ),
+	            array(
+		            "/((column|endrow)(?![\w-])([^\\]\\/]*(?:\\/(?!\\])[^\\]\\/]*)*?)(?:(\\/)\\]|\\]))<br \/>/",
+		            "$1"
+	            )
+            );
+
+	        // Run the regex.
+            foreach ( $patterns as $pattern ) {
+	            $content = preg_replace( $pattern[0], $pattern[1], $content );
+            }
+
+		    // Send the cleaned-up content on its way.
+		    return $content;
+
+	    }
+
 		/**
 		 * Close the last row <div> if it's still open. Clean up messy HTML left
 		 * in the content as a result of shortcodes interacting with wpautop().
@@ -252,7 +288,7 @@ if ( ! class_exists( 'Columns_DIY' ) ) {
 		 * @return string
 		 * @since  1.0
 		 */
-		function cleanup( $content ) {
+		function post_cleanup( $content ) {
 			
 			global $post;
 			$pid = $post->ID;
@@ -265,25 +301,8 @@ if ( ! class_exists( 'Columns_DIY' ) ) {
 				$closetag = $this->end_row();
 				$content = substr_replace( $content, $closetag, $lastcol[1] + strlen( $colstr ), 0 );
 			}
-			
-			// Regex patterns for cleaning up the HTML.
-			$patterns = array(
-				array(
-					'/' . $this->pfx( 'row' ) . "-([0-9]+) -->\n?\n?<\/p>/",
-					$this->pfx( 'row' ) . "-$1 -->\n"
-				),
-				array(
-					'/<p><div/',
-					'<div'
-				)
-			);
-			
-			// Run the regex.
-			foreach ( $patterns as $pattern ) {
-				$content = preg_replace( $pattern[0], $pattern[1], $content );
-			}
-			
-			// Send the cleaned up content on its way.
+
+			// Send the content on its way.
 			return $content;
 		
 		}
