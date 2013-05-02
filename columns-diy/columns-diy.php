@@ -31,10 +31,10 @@ if ( ! class_exists( 'Columns_DIY' ) ) {
     class Columns_DIY {
 		
 		/**
-		 * Set the prefix for all generated CSS classes.
+		 * Set the prefix for all generated CSS classes and hooks.
 		 */
-		private $prefix = 'diy-';
-		private function pfx( $attr ) { return $this->prefix . $attr; }
+		private $prefix = 'diy';
+		private function pfx( $attr, $div = '-' ) { return "{$this->prefix}{$div}{$attr}"; }
 		
 		/**
 		 * Variables for tracking column and row output.
@@ -75,7 +75,7 @@ if ( ! class_exists( 'Columns_DIY' ) ) {
 		 * @return string
 		 * @since  1.0
 		 */
-		function insert_column( $atts, $content = null ) {
+	    function insert_column( $atts, $content = null ) {
 			
 			global $post;
 			$pid = $post->ID;
@@ -86,12 +86,13 @@ if ( ! class_exists( 'Columns_DIY' ) ) {
 				'class'    => '',
 				'rowclass' => '',
 				'style'    => '',
+				'rowstyle' => '',
 				'norow'    => false
 			), $atts ) );
 			
 			// If it's the first column in the row, add an opening <div>.
 			if ( ! $this->openrow && ! $norow )
-				$pre_content .= $this->begin_row( $rowclass );
+				$pre_content .= $this->begin_row( $rowclass, $rowstyle );
 			
 			// Increment the column count.
 			if ( isset( $this->colcount[$pid] ) ) {
@@ -114,28 +115,38 @@ if ( ! class_exists( 'Columns_DIY' ) ) {
 			if ( $class )
 				$colclasslist .= ' ' . esc_attr( $class );
 				
+			// Filter hook diy_colclass
+			apply_filters( $this->pfx( 'colclass', '_' ), $colclasslist, $this->colcount, $this->rowcount );
+				
 			// Initial styles.
 			$colstyles = '';
 			
 			// Add custom styles.
 			if ( $style )
 				$colstyles .= ' style="' . esc_attr( $style ) . '"';
-			
+				
+			// Filter hook diy_colstyle
+			apply_filters( $this->pfx( 'colstyle', '_' ), $colstyles, $this->colcount, $this->rowcount );
+
+		    // Remove <p> and <br /> for manual reset.
+		    $content = preg_replace( '/<\/?p>/', "\n", $content );
+		    $content = preg_replace( '/<br ?\/?>/', "", $content );
+
+		    // Allow for other shortcodes inside [column][/column].
+		    $content = do_shortcode( $content );
+
+		    // Run wpautop manually.
+		    $content = wpautop( $content );
+
 			// Put it all together.
-			$content = $pre_content . '<div class="' . $colclasslist . '"' . $colstyles . ">\n" . $content . "</div>";
+			$content = "{$pre_content}<div class=\"{$colclasslist}\"{$colstyles}>\n{$content}</div>";
 			
-			// Allow for other shortcodes inside [column][/column].
-			$content = do_shortcode( $content );
-			
-			// Fix strange <p> placements
-			$content = preg_replace( '/<\/?p>/', "\n", $content );
-			$content = wpautop( $content );
-			
-			// Add column end marker
+			// Add column end marker.
 			$content .= "<!-- end " . $this->pfx( 'column' ) . "-" . $this->colcount[$pid] . " -->\n";
 			
 			// Output
-			return $content;
+			// Filter hook diy_column
+			return apply_filters( $this->pfx( 'column', '_' ), $content, $this->colcount, $this->rowcount );
 			
 		}
 		
@@ -143,11 +154,12 @@ if ( ! class_exists( 'Columns_DIY' ) ) {
 		 * Generate the opening <div> for a row. To add custom classes to this
 		 * <div>, use the rowclass attribute in the first [column] of a row.
 		 *
-		 * @param  string  Classes to add to the row div
+		 * @param  string $rowclass Classes to add to the row div
+		 * @param  string $rowstyle Styles to add to the row div
 		 * @return string
 		 * @since  1.0
 		 */
-		function begin_row( $rowclass = null ) {
+	    function begin_row( $rowclass = null, $rowstyle = null ) {
 			
 			global $post;
 			$pid = $post->ID;
@@ -172,12 +184,29 @@ if ( ! class_exists( 'Columns_DIY' ) ) {
 			// Add custom classes.
 			if ( $rowclass )
 				$rowclasslist .= ' ' . esc_attr( $rowclass );
+				
+			// Filter hook diy_rowclass
+			apply_filters( $this->pfx( 'rowclass', '_' ), $rowclasslist, $this->colcount, $this->rowcount );
+
+			// Initial styles.
+			$rowstyles = '';
+
+			// Add custom styles.
+			if ( $rowstyle )
+				$rowstyles .= ' style="' . esc_attr( $rowstyle ) . '"';
+
+			// Filter hook diy_rowstyle
+			apply_filters( $this->pfx( 'rowstyle', '_' ), $rowstyles, $this->colcount, $this->rowcount );
 			
 			// Mark the row as "open" (no closing <div> yet).
 			$this->openrow = 1;
 			
+			// Put it together.
+			$output = "<div class=\"{$rowclasslist}\"{$rowstyles}>\n";
+			
 			// Send opening <div> to insert_column.
-			return '<div class="' . $rowclasslist . "\">\n";
+			// Filter hook diy_beginrow
+			return apply_filters( $this->pfx( 'beginrow', '_' ), $output, $this->colcount, $this->rowcount );
 		
 		}
 		
@@ -200,8 +229,12 @@ if ( ! class_exists( 'Columns_DIY' ) ) {
 				// Reset column count.
 				$this->colcount[$pid] = 0;
 				
+				// Put it together.
+				$output = "</div><!-- end " . $this->pfx( 'row' ) . "-" . $this->rowcount[$pid] . " -->\n\n";
+				
 				// Send the closing </div> to the compiling function.
-				return "</div><!-- end " . $this->pfx( 'row' ) . "-" . $this->rowcount[$pid] . " -->\n\n";
+				// Filter hook diy_endrow
+				return apply_filters( $this->pfx( 'endrow', '_' ), $output, $this->colcount, $this->rowcount );
 				
 			} else {
 				
