@@ -18,8 +18,8 @@ See the [Recipes](https://github.com/jupiterwise/Columns-DIY/wiki/Recipes) page 
 ### Features ###
 
 * Includes enumerated column and row classes, allowing for per-column and -row styling. Also includes parity classes (odd/even) for striping.
-* If a user forgets to add the last `[endrow]` shortcode, the plugin will automatically insert a closing `</div>` so the site layout doesn't get broken.
-* Cleans up errant `<p>` and `</p>` tags that result from Wordpress's `wpautop()` function.
+* If a user forgets to add the last `[endrow]` shortcode, the plugin will automatically insert a closing `</div>` so the site layout doesn't break.
+* Cleans up errant `<p>` and `<br />` tags that result from Wordpress's `wpautop()` function.
 * All parameter inputs are escaped for security.
 
 ### Example ###
@@ -42,13 +42,11 @@ Will result in this output:
 <div class="diy-row diy-row-1 diy-row-odd">
 <div class="diy-column diy-column-1 diy-column-odd">
 <p>This is the column of Foo.</p>
-</div>
-<!-- end diy-column-1 -->
+</div><!-- end diy-column-1 -->
 
 <div class="diy-column diy-column-2 diy-column-even">
 <p>This is the column of Bar.</p>
-</div>
-<!-- end diy-column-2 -->
+</div><!-- end diy-column-2 -->
 </div><!-- end diy-row-1 -->
 ```
 
@@ -62,11 +60,25 @@ Classes for the column `<div>` element. Separate multiple classes with spaces.
 Classes for the row `<div>` element. Only works when included with the first `[column]` shortcode in a row.
 * _style_ (String : '')
 Inline styles for the column `<div>` element.
+* _rowstyle_ (String : '')
+Inline styles for the row `<div>` element. Only works when included with the first `[column]` shortcode in a row.
 * _norow_ (Boolean : false)
 Set to true to omit the row wrapper `<div>`.
 
 Example:
-`[column class="column-class-1 column-class-2" rowclass="row-class-1 row-class-2" style="color:green;" norow="true"]`
+`[column class="column-class-1 column-class-2" rowclass="row-class-1 row-class-2" style="color:blue;" rowstyle="background:orange;" norow="true"]`
+
+### Filters ###
+
+The following filter hooks can be used to alter the output of the shortcodes:
+
+* `diy_colclass`
+* `diy_colstyle`
+* `diy_column`
+* `diy_rowclass`
+* `diy_rowstyle`
+* `diy_beginrow`
+* `diy_endrow`
 
 ## Installation ##
 

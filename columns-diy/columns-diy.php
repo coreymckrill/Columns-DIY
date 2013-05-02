@@ -3,13 +3,13 @@
 Plugin Name: Columns DIY
 Plugin URI: https://github.com/jupiterwise/Columns-DIY/
 Description: Two simple shortcodes for generating div-based columns and rows. Wrap the desired content in <code>[column]</code> <code>[/column]</code>. Mark the end of a row with <code>[endrow]</code>. CSS not included.
-Version: 1.0
+Version: 1.1
 Author: Corey McKrill
 Author URI: http://jupiterwise.com/
 License: GNU General Public License v2.0
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Copyright 2012, Corey McKrill.
+Copyright 2013, Corey McKrill.
 
 This program is free software; you can redistribute it and/or 
 modify it under the terms of the GNU General Public License 
@@ -71,8 +71,8 @@ if ( ! class_exists( 'Columns_DIY' ) ) {
 		 * style    - Optional inline styles for the column <div> element.
 		 * norow    - Set to true to omit the row wrapper <div>.
 		 *
-		 * @param  array   Array of values from shortcode attributes
-		 * @param  string  Optional string of initial content
+		 * @param  array  $atts    Array of values from shortcode attributes
+		 * @param  string $content Optional string of initial content
 		 * @return string
 		 * @since  1.0
 		 */
@@ -145,7 +145,7 @@ if ( ! class_exists( 'Columns_DIY' ) ) {
 			// Add column end marker.
 			$content .= "<!-- end " . $this->pfx( 'column' ) . "-" . $this->colcount[$pid] . " -->\n";
 			
-			// Output
+			// Output.
 			// Filter hook diy_column
 			return apply_filters( $this->pfx( 'column', '_' ), $content, $this->colcount, $this->rowcount );
 			
@@ -284,9 +284,9 @@ if ( ! class_exists( 'Columns_DIY' ) ) {
 		 * Close the last row <div> if it's still open. Clean up messy HTML left
 		 * in the content as a result of shortcodes interacting with wpautop().
 		 *
-		 * @param  string  Content to clean up
+		 * @param  string $content Content to clean up
 		 * @return string
-		 * @since  1.0
+		 * @since  1.1
 		 */
 		function post_cleanup( $content ) {
 			

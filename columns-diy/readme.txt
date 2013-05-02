@@ -3,8 +3,8 @@ Contributors: jupiterwise
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FC54RLA8U6VCC
 Tags: shortcode, columns
 Requires at least: 2.8
-Tested up to: 3.4.1
-Stable tag: 1_0
+Tested up to: 3.5.1
+Stable tag: 1_1
 License: GPLv2
 
 Simple shortcodes for div-based columns and rows. Wrap desired content in [column][/column]. Mark the end of a row with [endrow]. CSS not included.
@@ -26,7 +26,7 @@ See the [Recipes](https://github.com/jupiterwise/Columns-DIY/wiki/Recipes) page 
 
 * Includes enumerated column and row classes, allowing for per-column and -row styling. Also includes parity classes (odd/even) for striping.
 * If a user forgets to add the last `[endrow]` shortcode, the plugin will automatically insert a closing `</div>` so the site layout doesn't get broken.
-* Cleans up errant `<p>` and `</p>` tags that result from Wordpress's `wpautop()` function.
+* Cleans up errant `<p>` and `<br />` tags that result from Wordpress's `wpautop()` function.
 * All parameter inputs are escaped for security.
 
 = Example =
@@ -48,13 +48,11 @@ Will result in this output:
 `<div class="diy-row diy-row-1 diy-row-odd">
 <div class="diy-column diy-column-1 diy-column-odd">
 <p>This is the column of Foo.</p>
-</div>
-<!-- end diy-column-1 -->
+</div><!-- end diy-column-1 -->
 
 <div class="diy-column diy-column-2 diy-column-even">
 <p>This is the column of Bar.</p>
-</div>
-<!-- end diy-column-2 -->
+</div><!-- end diy-column-2 -->
 </div><!-- end diy-row-1 -->
 `
 
@@ -68,8 +66,22 @@ Classes for the column `<div>` element. Separate multiple classes with spaces.
 Classes for the row `<div>` element. Only works when included with the first `[column]` shortcode in a row.
 * _style_ (String : '')
 Inline styles for the column `<div>` element.
+* _rowstyle_ (String : '')
+Inline styles for the row `<div>` element. Only works when included with the first `[column]` shortcode in a row.
 * _norow_ (Boolean : false)
 Set to true to omit the row wrapper `<div>`.
+
+= Filters =
+
+The following filter hooks can be used to alter the output of the shortcodes:
+
+* `diy_colclass`
+* `diy_colstyle`
+* `diy_column`
+* `diy_rowclass`
+* `diy_rowstyle`
+* `diy_beginrow`
+* `diy_endrow`
 
 == Installation ==
 
@@ -88,6 +100,11 @@ There are a few different options for adding the CSS to style your columns:
 Check out the [GitHub repository](https://github.com/jupiterwise/Columns-DIY) for more information.
 
 == Changelog ==
+
+= 1.1 =
+* Added `rowstyle` parameter to allow for inline styles on the row `<div>`.
+* Added filter hooks for altering the output of the shortcodes.
+* Improved process for cleaning up `<p>` and `<br />` tags.
 
 = 1.0 =
 * The initial release to the WordPress plugin repository.
