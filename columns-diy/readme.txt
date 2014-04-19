@@ -3,7 +3,7 @@ Contributors: jupiterwise
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FC54RLA8U6VCC
 Tags: shortcode, columns
 Requires at least: 2.8
-Tested up to: 3.5.1
+Tested up to: 3.9
 Stable tag: 1_1
 License: GPLv2
 
